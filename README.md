@@ -1,1 +1,1 @@
-# CS-396-Parallelized-Divide-and-Conquer-Matrix-Multiplication-System
+# CS-396-Parallelized-Divide-and-Conquer-Matrix-Multiplication-System Christian Rara and Yahir Perez
