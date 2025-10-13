@@ -13,4 +13,3 @@ def divide(row_mat, col_mat):
             column = [col[j] for col in col_mat]
             # Send to multiplier container
             
-        

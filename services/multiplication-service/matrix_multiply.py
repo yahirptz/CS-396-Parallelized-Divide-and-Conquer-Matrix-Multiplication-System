@@ -5,4 +5,9 @@ def multiply_row_column(row, column):
     result = 0
     for i in range(len(row)):
         result += row[i] * column[i]
-    
+    print(result)
+
+if __name__ == "__main__":
+    row = [1, 2, 3]
+    column = [4, 5, 6]
+    multiply_row_column(row, column)  # Should print 32
