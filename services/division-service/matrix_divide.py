@@ -10,7 +10,7 @@ def divide(row_mat, col_mat):
         index = i % 10000
         row = row_mat[i]
         for j in range(1, len(col_mat)+1):
-            column = col_mat[j]
+            column = [col[j] for col in col_mat]
             # Send to multiplier container
             
         
