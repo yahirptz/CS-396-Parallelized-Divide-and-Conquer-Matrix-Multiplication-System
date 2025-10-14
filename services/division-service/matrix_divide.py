@@ -11,6 +11,6 @@ def divide(row_mat, col_mat):
         row = row_mat[i]
         for j in range(1, len(col_mat)+1):
             column = col_mat[j]
-            # Send to multiplier container via API call
+            # Send to multiplier container
             
         
