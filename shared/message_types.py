@@ -12,9 +12,7 @@ class MessageType(Enum):
 
 def create_result_message(row_index: int, col_index: int, value: float):
     """
-    Christian's multiplication service calls this to send you a result
-    Example: create_result_message(0, 5, 42.5)
-    Means: row 0, column 5 = 42.5
+    Christian's multiplication service callsg
     """
     return {
         "type": "RESULT",
@@ -25,11 +23,7 @@ def create_result_message(row_index: int, col_index: int, value: float):
 
 
 def create_init_message(rows: int, cols: int):
-    """
-    GUI calls this first to tell you the size of the result matrix
-    Example: create_init_message(100, 100)
-    Means: create a 100x100 matrix to store results
-    """
+    
     return {
         "type": "INIT_MATRIX",
         "rows": rows,                # Number of rows in result
@@ -38,20 +32,14 @@ def create_init_message(rows: int, cols: int):
 
 
 def create_status_request():
-    """
-    GUI can call this to ask "how many results have you received?"
-    """
+   
     return {
         "type": "STATUS"
     }
 
 
 def create_status_response(received: int, total: int):
-    """
-    You send this back when GUI asks for status
-    Example: create_status_response(50, 100)
-    Means: received 50 out of 100 results
-    """
+   
     return {
         "type": "STATUS",
         "received": received,        # How many results collected so far
@@ -70,10 +58,7 @@ def create_get_matrix_request():
 
 
 def create_matrix_response(matrix: list):
-    """
-    You send this back to GUI with the completed matrix
-    Example: create_matrix_response([[1, 2], [3, 4]])
-    """
+    
     return {
         "type": "MATRIX_RESPONSE",
         "matrix": matrix             # The final matrix
