@@ -6,10 +6,19 @@
 # col_mat: the matrix in which only columns are used to multiply into a row
 
 def divide(row_mat, col_mat):
-    for i in range(1, len(row_mat)+1):
-        index = i % 10000
+    """
+    Divides two matrices into individual rows and columns for multiplication.
+
+    Parameters:
+        row_mat (list of list of numbers): The matrix whose rows are used for multiplication.
+        col_mat (list of list of numbers): The matrix whose columns are used for multiplication.
+
+    Returns:
+        None
+    """
+    for i in range(len(row_mat)):
         row = row_mat[i]
-        for j in range(1, len(col_mat)+1):
+        for j in range(len(col_mat)):
             column = col_mat[j]
             # Send to multiplier container
             
