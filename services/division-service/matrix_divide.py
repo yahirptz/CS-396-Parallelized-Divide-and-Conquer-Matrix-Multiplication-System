@@ -1,10 +1,3 @@
-# Divide entire matrix into one row and one column at a time, and send
-# each row and column to matrix_multiply container(s)
-
-# Take in two matrices and divide it into one row and one column.
-# row_mat: the matrix in which only rows are used to multiply into a column
-# col_mat: the matrix in which only columns are used to multiply into a row
-
 def divide(row_mat, col_mat):
     """
     Divides two matrices into individual rows and columns for multiplication.
@@ -19,7 +12,22 @@ def divide(row_mat, col_mat):
     for i in range(len(row_mat)):
         row = row_mat[i]
         for j in range(len(col_mat)):
-            column = col_mat[j]
-            # Send to multiplier container
+            column = [col[j] for col in col_mat]
+            # Save the row and column for processing
+            print(f"Row {i+1}: {row}, Column {j+1}: {column}")
             
-        
+if __name__ == "__main__":
+    # Example matrices
+    row_matrix = [
+        [1, 2, 3],
+        [4, 5, 6],
+        [7, 8, 9]
+    ]
+    
+    col_matrix = [
+        [9, 8, 7],
+        [6, 5, 4],
+        [3, 2, 1]
+    ]
+
+    divide(row_matrix, col_matrix)
