@@ -7,7 +7,7 @@ class MessageType(Enum):
     GET_MATRIX = "GET_MATRIX"      # Ask aggregation for the final matrix
     STATUS = "STATUS"              # Check how many results we've received
 
-    def create_result_message(row_index: int, col_index: int, value: float):
+def create_result_message(row_index: int, col_index: int, value: float):
         """
         Christian's multiplication service calls this to send you a result
         Example: create_result_message(0, 5, 42.5)
@@ -21,7 +21,7 @@ class MessageType(Enum):
         }
 
 
-    def create_init_message(rows: int, cols: int):
+def create_init_message(rows: int, cols: int):
         """
         GUI calls this first to tell you the size of the result matrix
         Example: create_init_message(100, 100)
@@ -34,7 +34,7 @@ class MessageType(Enum):
         }
 
 
-    def create_status_request():
+def create_status_request():
         """
         GUI can call this to ask "how many results have you received?"
         """
@@ -43,7 +43,7 @@ class MessageType(Enum):
         }
 
 
-    def create_status_response(received: int, total: int):
+def create_status_response(received: int, total: int):
         """
         You send this back when GUI asks for status
         Example: create_status_response(50, 100)
@@ -57,7 +57,7 @@ class MessageType(Enum):
         }
 
 
-    def create_get_matrix_request():
+def create_get_matrix_request():
         """
         GUI calls this when it wants the final completed matrix
         """
@@ -66,7 +66,7 @@ class MessageType(Enum):
         }
 
 
-    def create_matrix_response(matrix: list):
+def create_matrix_response(matrix: list):
         """
         You send this back to GUI with the completed matrix
         Example: create_matrix_response([[1, 2], [3, 4]])

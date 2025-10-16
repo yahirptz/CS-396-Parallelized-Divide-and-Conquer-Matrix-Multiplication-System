@@ -1,14 +1,11 @@
 # Build and run all services
 
 services: 
+    matrix-GUI:
+        build: services\gui-service
+        ports: "5000:10000"
     matrix-divider:
         build: services\division-service
-        #deploy:
-         #   replicas: 100
-          #  resources:
-           #     limits:
-            #        cpus: "0.1"
-             #       memory: 50M
 
     matrix-multiplier:
         build: services\multiplication-service
@@ -21,6 +18,9 @@ services:
     
     matrix-aggregator:
         build: services\aggregation-service
+        depends_on:
+            - matrix-divider
+            - matrix-multiplier
         
     
     

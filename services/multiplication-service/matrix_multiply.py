@@ -1,7 +1,9 @@
 import sys
 import os
-sys.path.append('C:/Users/jessc/OneDrive/Documents/Test/CS-396-Parallelized-Divide-and-Conquer-Matrix-Multiplication-System/shared')
-from message_types import MessageType
+shared_path = os.path.join(os.path.dirname(__file__), '..', '..', 'shared')
+sys.path.insert(0, shared_path)
+
+from message_types import create_result_message
 
 # Taking in one row and one column, multiply them together.
 # The result is one (1) element, which will then be put into the completed matrix.
@@ -24,7 +26,7 @@ def multiply_row_column(row, column, row_index, col_index):
         result += row[i] * column[i]
     
     # Create message with result position and value
-    return MessageType.create_result_message(row_index, col_index, result)
+    return create_result_message(row_index, col_index, result)
 
 if __name__ == "__main__":
     # Test example
