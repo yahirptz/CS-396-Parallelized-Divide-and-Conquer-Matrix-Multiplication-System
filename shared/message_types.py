@@ -22,39 +22,29 @@ def create_result_message(row_index: int, col_index: int, value: float):
 
 
 def create_init_message(rows: int, cols: int):
-        """
-        GUI calls this first to tell you the size of the result matrix
-        Example: create_init_message(100, 100)
-        Means: create a 100x100 matrix to store results
-        """
-        return {
-            "type": "INIT_MATRIX",
-            "rows": rows,                # Number of rows in result
-            "cols": cols                 # Number of columns in result
-        }
+    
+    return {
+        "type": "INIT_MATRIX",
+        "rows": rows,                # Number of rows in result
+        "cols": cols                 # Number of columns in result
+    }
 
 
 def create_status_request():
-        """
-        GUI can call this to ask "how many results have you received?"
-        """
-        return {
-            "type": "STATUS"
-        }
+   
+    return {
+        "type": "STATUS"
+    }
 
 
 def create_status_response(received: int, total: int):
-        """
-        You send this back when GUI asks for status
-        Example: create_status_response(50, 100)
-        Means: received 50 out of 100 results
-        """
-        return {
-            "type": "STATUS",
-            "received": received,        # How many results collected so far
-            "total": total,              # How many results expected total
-            "complete": received == total  # True when done
-        }
+   
+    return {
+        "type": "STATUS",
+        "received": received,        # How many results collected so far
+        "total": total,              # How many results expected total
+        "complete": received == total  # True when done
+    }
 
 
 def create_get_matrix_request():
@@ -67,11 +57,11 @@ def create_get_matrix_request():
 
 
 def create_matrix_response(matrix: list):
-        """
-        You send this back to GUI with the completed matrix
-        Example: create_matrix_response([[1, 2], [3, 4]])
-        """
-        return {
-            "type": "MATRIX_RESPONSE",
-            "matrix": matrix             # The final matrix
-        }
+    """
+    You send this back to GUI with the completed matrix
+    Example: create_matrix_response([[1, 2], [3, 4]])
+    """
+    return {
+        "type": "MATRIX_RESPONSE",
+        "matrix": matrix             # The final matrix
+    }
