@@ -142,7 +142,7 @@ def start_tcp_server():
     # Listen for connections
     server_socket.listen(5)
     print(f"Aggregation Service listening on {host}:{port}")
-    print("Waiting for connections from workers...")
+    print("Waiting for connections from workers")
     
     
     while True:
