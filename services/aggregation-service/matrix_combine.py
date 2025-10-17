@@ -7,6 +7,9 @@
 
 import sys
 import os
+import socket
+import json
+import threading
 
 shared_path = os.path.join(os.path.dirname(__file__), '..', '..', 'shared')
 sys.path.insert(0, shared_path)
@@ -73,31 +76,86 @@ def is_complete():
     return results_received == total_results
 
 
-# Test the aggregation logic
+def handle_client(client_socket, address):
+    #handles incoming TCP connection from worker
+    try:
+        # Receive data from client
+        data = client_socket.recv(4096)
+        
+        if data:
+            # Convert bytes to JSON to dictionary
+            message = json.loads(data.decode('utf-8'))
+            message_type = message.get('type')
+            
+            if message_type == 'INIT_MATRIX':
+                # Initialize the matrix
+                rows = message['rows']
+                cols = message['cols']
+                initialize_matrix(rows, cols)
+                
+                # Send response back
+                response = {"status": "initialized"}
+                client_socket.send(json.dumps(response).encode('utf-8'))
+                
+            elif message_type == 'RESULT':
+                # Receive a result from worker
+                row = message['row_index']
+                col = message['col_index']
+                value = message['value']
+                
+                # Use existing function to add result
+                add_result(row, col, value)
+                
+                # Send acknowledgment
+                response = {"status": "received"}
+                client_socket.send(json.dumps(response).encode('utf-8'))
+                
+            elif message_type == 'GET_MATRIX':
+                # Send completed matrix
+                response = get_final_matrix()
+                client_socket.send(json.dumps(response).encode('utf-8'))
+                
+            elif message_type == 'STATUS':
+                # Send status
+                response = get_status()
+                client_socket.send(json.dumps(response).encode('utf-8'))
+    
+    except Exception as e:
+        print(f"Error handling client {address}: {e}")
+    
+    finally:
+        client_socket.close()
+
+
+def start_tcp_server():
+    #starts TCP server to listen for connections
+    host = '0.0.0.0'
+    port = 5003
+    
+    # Create TCP socket
+    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    
+    # Bind to port
+    server_socket.bind((host, port))
+    
+    # Listen for connections
+    server_socket.listen(5)
+    print(f"Aggregation Service listening on {host}:{port}")
+    print("Waiting for connections from workers...")
+    
+    
+    while True:
+        client_socket, address = server_socket.accept()
+        print(f"Connection from {address}")
+        
+        # Handle each connection in separate thread
+        client_thread = threading.Thread(target=handle_client, args=(client_socket, address))
+        client_thread.start()
+
+
 if __name__ == '__main__':
-    print("Testing aggregation logic...")
-    
-    # Test with small 3x3 matrix
-    initialize_matrix(3, 3)
-    
-    # Simulate receiving results
-    add_result(0, 0, 15.0)
-    add_result(0, 1, 18.0)
-    add_result(0, 2, 21.0)
-    add_result(1, 0, 42.0)
-    add_result(1, 1, 54.0)
-    add_result(1, 2, 66.0)
-    add_result(2, 0, 69.0)
-    add_result(2, 1, 90.0)
-    add_result(2, 2, 111.0)
-    
-    # Check status
-    status = get_status()
-    print(f"\nStatus: {status}")
-    
-    # Get final matrix
-    if is_complete():
-        result = get_final_matrix()
-        print("\nFinal Matrix:")
-        for row in result['matrix']:
-            print(row)
+    print("=" * 50)
+    print("Starting Aggregation Service")
+    print("=" * 50)
+    start_tcp_server()
