@@ -1,9 +1,14 @@
 FROM python:latest
 LABEL Creator="Christian"
 
-WORKDIR /
-COPY matrix_combine.py ./
+WORKDIR /app
 
-EXPOSE 5000:5003
+COPY services/aggregation-service/requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY shared /shared
+COPY services/aggregation-service/matrix_combine.py .
+
+EXPOSE 5003
 
 CMD [ "python", "./matrix_combine.py"]
