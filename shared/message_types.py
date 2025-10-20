@@ -7,6 +7,31 @@ class MessageType(Enum):
     GET_MATRIX = "GET_MATRIX"      # Ask aggregation for the final matrix
     STATUS = "STATUS"              # Check how many results we've received
 
+def create_gui_message(mat_file1, mat_file2):
+    """
+    GUI calls this to send matrices to division service
+    Example: create_gui_message(matrix1, matrix2)
+    """
+    return {
+        "type": "DIVIDE",
+        "matrix1": mat_file1,   # Path to first matrix file
+        "matrix2": mat_file2    # Path to second matrix file
+    }
+
+def create_divide_message(row: list, column: list, row_index: int, col_index: int):
+    """
+    Division service calls this to send a row and column to multiplication service
+    Example: create_divide_message([1,2,3], [4,5,6], 0, 1)
+    Means: row 0 ([1,2,3]) and column 1 ([4,5,6]) to multiply
+    """
+    return {
+        "type": "MULTIPLY",
+        "row": row,                  # The row to multiply
+        "column": column,            # The column to multiply
+        "row_index": row_index,      # Which row of final matrix
+        "col_index": col_index       # Which column of final matrix
+    }
+
 def create_result_message(row_index: int, col_index: int, value: float):
         """
         Christian's multiplication service calls this to send you a result
