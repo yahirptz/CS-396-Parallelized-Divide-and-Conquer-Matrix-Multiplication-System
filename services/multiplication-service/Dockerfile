@@ -1,6 +1,9 @@
 FROM python:latest
 LABEL Creator="Christian"
 
+COPY services/multiplication-service/requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
 WORKDIR /
 COPY matrix_multiply.py ./
 
