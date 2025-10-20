@@ -3,7 +3,7 @@
 services: 
     matrix-GUI:
         build: services\gui-service
-        ports: "5000:10000"
+        ports: "5000:5000"
     matrix-divider:
         build: services\division-service
 
