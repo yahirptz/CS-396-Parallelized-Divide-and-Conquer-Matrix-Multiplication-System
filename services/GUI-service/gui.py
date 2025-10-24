@@ -41,6 +41,8 @@ def connect_to_division_service(mat1, mat2):
 	try:
 		client_socket.connect((host, port))
 		client_socket.sendall(json.dumps(message).encode('utf-8'))
+		print("✓ Matrices sent successfully!")
+		print(f"Processing {len(mat1)}x{len(mat2[0])} matrix multiplication...")
 
 	except Exception as e:
 		print(f"Error connecting to Division Service: {e}")
