@@ -4,9 +4,11 @@ LABEL Creator="Christian"
 COPY services/multiplication-service/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
+COPY shared /shared
+
 WORKDIR /
-COPY matrix_multiply.py ./
+COPY services/multiplication-service/matrix_multiply.py ./
 
-EXPOSE 5000:5002
+EXPOSE 5002
 
-CMD [ "python", "./matrix_multiply.py"]
+CMD [ "python", "-u", "./matrix_multiply.py"]

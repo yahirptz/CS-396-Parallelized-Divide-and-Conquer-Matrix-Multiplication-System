@@ -1,26 +1,40 @@
 # Build and run all services
 
 services: 
-    matrix-GUI:
-        build: services\gui-service
-        ports: "5000:5000"
     matrix-divider:
-        build: services\division-service
+        build:
+            context: .
+            dockerfile: services/division-service/Dockerfile
+        ports:
+            - "5001:5001"
+        networks:
+            - matrix-net
 
     matrix-multiplier:
-        build: services\multiplication-service
+        build:
+            context: .
+            dockerfile: services/multiplication-service/Dockerfile
         deploy:
             replicas: 100
             resources:
                 limits:
                     cpus: "0.1"
                     memory: 50M
+        networks:
+            - matrix-net
     
     matrix-aggregator:
-        build: services\aggregation-service
+        build:
+            context: .
+            dockerfile: services/aggregation-service/Dockerfile
+        ports:
+            - "5003:5003"
         depends_on:
             - matrix-divider
             - matrix-multiplier
-        
-    
-    
+        networks:
+            - matrix-net
+
+networks:
+    matrix-net:
+        driver: bridge

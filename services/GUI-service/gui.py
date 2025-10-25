@@ -20,35 +20,94 @@ def open_file(entry_widget):
 		entry_widget.config(state="readonly")
 
 def on_calculate():
-	# Gather matrices/connect to division service 
+	# Gather matrices and connect to division service via TCP
 	try:
 		mat_file1 = file_entry1.get()
 		mat_file2 = file_entry2.get()
 		if not mat_file1 or not mat_file2:
 			matrix1 = np.random.randint(1, 1000, size=(100, 100)).tolist()
 			matrix2 = np.random.randint(1, 1000, size=(100, 100)).tolist()
+			
+			# Send matrices
 			connect_to_division_service(matrix1, matrix2)
+			
+			# Wait for processing to complete
+			import time
+			print("Waiting for processing to start...")
+			time.sleep(5)
+			
+			# Keep checking until complete
+			print("Checking progress...")
+			for i in range(100):
+				try:
+					sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+					sock.settimeout(5)
+					sock.connect(('localhost', 5003))
+					sock.sendall(json.dumps({"type": "STATUS"}).encode('utf-8'))
+					response = sock.recv(4096)
+					status = json.loads(response.decode('utf-8'))
+					sock.close()
+					
+					print(f"Progress: {status['received']}/{status['total']}")
+					
+					if status['complete']:
+						print("Processing complete!")
+						break
+					time.sleep(2)
+				except Exception as e:
+					print(f"Waiting for aggregation service... ({e})")
+					time.sleep(2)
+			
+			# Now get results
+			print("Retrieving final matrix...")
+			sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+			sock.settimeout(30)
+			sock.connect(('localhost', 5003))
+			sock.sendall(json.dumps({"type": "GET_MATRIX"}).encode('utf-8'))
+			
+			# Receive all data in loop
+			response = b''
+			while True:
+				chunk = sock.recv(65536)
+				if not chunk:
+					break
+				response += chunk
+				try:
+					data = json.loads(response.decode('utf-8'))
+					break  # Complete JSON received
+				except json.JSONDecodeError:
+					continue  # Keep receiving
+			
+			sock.close()
+			
+			# Save result
+			with open('result_matrix.json', 'w') as f:
+				json.dump(data['matrix'], f)
+			print(f"Done! Matrix has {len(data['matrix'])} rows")
+			print("Saved to result_matrix.json")
+			
 	except Exception as e:
 		print(f"Error: {e}")
 
 def connect_to_division_service(mat1, mat2):
 	host = 'localhost'
-	port = 5001
+	port = 5001  # Port for division service
 	message = create_gui_message(mat1, mat2)
 
 	# Create TCP socket
 	client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	try:
+		# Connect and send data
 		client_socket.connect((host, port))
 		client_socket.sendall(json.dumps(message).encode('utf-8'))
 		print("✓ Matrices sent successfully!")
 		print(f"Processing {len(mat1)}x{len(mat2[0])} matrix multiplication...")
 
 	except Exception as e:
-		print(f"Error connecting to Division Service: {e}")
+		print(f"✗ Error connecting to Division Service: {e}")
 
 	finally:
-	
+		# Close the socket
 		client_socket.close()
 
 
@@ -56,8 +115,8 @@ def connect_to_division_service(mat1, mat2):
 root = tk.Tk()
 root.title("Matrix Multiplier")
 
-root.geometry("600x600+100+100")
-root.resizable(False, False)
+root.geometry("600x600+100+100")   # Set window size and position
+root.resizable(False, False)  # Disable window resizing
 
 
 frame = ttk.Frame(root, padding=(20, 20))
@@ -93,7 +152,3 @@ calculate_button = ttk.Button(frame, text="Calculate", width=20, command=on_calc
 calculate_button.grid(row=6, column=0, columnspan=2, pady=(5,0), ipadx=10, ipady=10)
 
 root.mainloop()
-
-
-
-

@@ -50,7 +50,7 @@ def handle_client(client_socket, address):
                     result_message = multiply_row_column(row, column, row_index, col_index)
                     
                     # Send result to aggregation service
-                    send_to_aggregate(result_message,'0.0.0.0', 5003)
+                    send_to_aggregate(result_message, 'matrix-aggregator', 5003)
                     client_socket.sendall(json.dumps(result_message).encode('utf-8'))
                     print(f"Sent result to {address}: {result_message}")
 
@@ -76,8 +76,8 @@ def start_tcp_server():
     
     # Listen for connections
     server_socket.listen(5)
-    print(f"Aggregation Service listening on {host}:{port}")
-    print("Waiting for connections from workers")
+    print(f"Multiplication Service listening on {host}:{port}")
+    print("Waiting for connections from division service")
     
     
     while True:
